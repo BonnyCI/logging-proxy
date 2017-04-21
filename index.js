@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 const CIDRMatcher = require('cidr-matcher');
 const http = require('http');
 const net = require('net');
 const node_static = require('node-static');
+const path = require('path');
 const querystring = require('querystring');
 const sockjs = require('sockjs');
 const winston = require('winston');
@@ -10,9 +13,28 @@ const yargs = require('yargs');
 
 var argv = yargs
     .usage('Usage: $0 <command> [options]')
-    .alias('l', 'log-config')
-    .nargs('1', 1)
-    .describe('l', 'Load winston config logging from file')
+    .env('BLP')
+    .option('l', {
+        alias: 'log-config',
+        nargs: 1,
+        describe: 'Load winston config logging from file',
+        normalize: true,
+        coerce: path.resolve
+    })
+    .option('p', {
+        alias: 'port',
+        nargs: 1,
+        describe: 'The port to listen on',
+        number: true,
+        default: 3000
+    })
+    .option('b', {
+        alias: 'bind',
+        nargs: 1,
+        describe: 'The interface IP to bind to',
+        string: true,
+        default: '0.0.0.0'
+    })
     .help('h')
     .alias('h', 'help')
     .argv;
@@ -40,9 +62,6 @@ if (argv.l) {
 }
 
 var matcher = new CIDRMatcher([ '10.0.0.0/8', '172.16.30.0/24' ]);
-
-const node_host = process.env.NODE_HOST || "0.0.0.0";
-const node_port = process.env.NODE_PORT || 3000;
 
 var sockjs_server = sockjs.createServer({
     sockjs_url: "https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js"
@@ -128,5 +147,5 @@ server.addListener('upgrade', function(req,res) {
 
 sockjs_server.installHandlers(server, { prefix: '/sock' });
 
-appLogger.info('listening on ' + node_host + ':' + node_port);
-server.listen(node_port, node_host);
+appLogger.info('listening on ' + argv.b + ':' + argv.p);
+server.listen(argv.p, argv.b);
