@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>BonnyCI Log</title>
+
+        <link href="https://cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            #log div {
+                max-height: 600px;
+                overflow-y: scroll;
+            }
+        </style>
+
+    </head>
+
+    <body lang="en">
+        <h1>BonnyCI Log Results:</h1>
+
+        <div id="log">
+          <div></div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js"></script>
+        <script>
+            var sockjs = new SockJS('/sock' + window.location.search);
+            var div = $('#log div');
+
+            var print = function(msg) {
+                // msg = JSON.stringify(msg);
+
+                msg.split("\n").forEach(function(item, idx) {
+                    div.append($("<code>").text(item));
+                    div.append($("<br>"));
+                });
+
+                div.scrollTop(div[0].scrollHeight - div.height());
+            };
+
+            sockjs.onopen = function() {
+                print('[*] open protocol: ' + sockjs.protocol);
+            };
+
+            sockjs.onmessage = function(e) {
+                print(e.data);
+            };
+
+            sockjs.onclose = function() {
+                print('[*] close');
+            };
+        </script>
+    </body>
+</html>

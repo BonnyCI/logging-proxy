@@ -1,0 +1,10 @@
+{
+  "name": "bonnyci-logging-proxy",
+  "version": "0.0.1",
+  "description": "Proxy the telnet logs of zuul into a websocket",
+  "dependencies": {
+    "cidr-matcher": "^1.0.5",
+    "node-static": "^0.7.9",
+    "sockjs": "^0.3.18"
+  }
+}
