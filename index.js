@@ -134,12 +134,9 @@ sockjs_server.on('connection', function(conn) {
 
 });
 
-var static_directory = new node_static.Server(__dirname);
 var server = http.createServer();
 
-server.addListener('request', function(req, res) {
-    static_directory.serve(req, res);
-});
+require('./static')(server);
 
 server.addListener('upgrade', function(req,res) {
     res.end();
