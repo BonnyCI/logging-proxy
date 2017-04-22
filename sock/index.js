@@ -1,5 +1,3 @@
-'use strict'
-
 const CIDRMatcher = require('cidr-matcher');
 const config = require('../config');
 const net = require('net');
@@ -9,6 +7,7 @@ const sockjs = require('sockjs');
 const matcher = new CIDRMatcher([ '10.0.0.0/8', '172.16.30.0/24' ]);
 
 module.exports = function(server) {
+    'use strict';
 
     var sockjs_server = sockjs.createServer({
         sockjs_url: "https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js"
@@ -20,16 +19,16 @@ module.exports = function(server) {
 
         if (loc < 0) {
             config.logger.app.info("no query string found");
-            conn.close()
+            conn.close();
             return;
         }
 
-        var qs = conn.url.substring(loc + 1)
+        var qs = conn.url.substring(loc + 1);
         var params = querystring.parse(qs);
 
         if (!params.host) {
             config.logger.app.info('host not specified in query string: ' + qs);
-            conn.close()
+            conn.close();
             return;
         }
 
@@ -64,7 +63,7 @@ module.exports = function(server) {
             // connect occurs
             config.logger.telnet.warning("Error: " + err.message);
             conn.write('error: ' +  err.message);
-            conn.end()
+            conn.end();
         });
 
         config.logger.app.debug("setup complete to IP: " + params.host);
