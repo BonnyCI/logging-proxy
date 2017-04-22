@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -13,9 +15,18 @@ module.exports = function(grunt) {
             options: {
                 esversion: 6
             }
+        },
+
+        mochaTest: {
+            test: {
+                options: {
+                },
+                src: ['**/*.spec.js']
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
 };

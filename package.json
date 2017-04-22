@@ -19,7 +19,12 @@
     "start": "node server.js"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "grunt": "^1.0.1",
-    "grunt-contrib-jshint": "^1.1.0"
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-mocha-test": "^0.13.2",
+    "mocha": "^3.2.0",
+    "sinon": "^2.1.0",
+    "winston-null": "^1.0.2"
   }
 }

@@ -97,7 +97,7 @@ function onConnection(conn) {
 
 }
 
-module.exports = function(server) {
+module.exports.register = function(server) {
     'use strict';
 
     var sockjs_server = sockjs.createServer({
@@ -110,5 +110,9 @@ module.exports = function(server) {
     server.addListener('upgrade', function(req, res) {
         res.end();
     });
+}
 
-};
+if (config.isTest) {
+    module.exports.getHost = getHost;
+    module.exports.getParams = getParams;
+}
