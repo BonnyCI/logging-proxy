@@ -6,6 +6,31 @@ const sockjs = require('sockjs');
 
 const matcher = new CIDRMatcher([ '10.0.0.0/8', '172.16.30.0/24' ]);
 
+function getParams(url) {
+    var loc = url.indexOf("?");
+
+    if (loc < 0) {
+        config.logger.app.info("no query string found");
+        return null;
+    }
+
+    return querystring.parse(url.substring(loc + 1));
+}
+
+function getHost(params) {
+    if (!params.host) {
+        config.logger.app.info('host not specified in query string: ' + params.host);
+        return null;
+    }
+
+    if (!matcher.contains(params.host)) {
+        config.logger.app.warning("Attempt to proxy to an unauthorized IP: " + params.host);
+        return null;
+    }
+
+    return params.host;
+}
+
 module.exports = function(server) {
     'use strict';
 
@@ -15,30 +40,21 @@ module.exports = function(server) {
 
     sockjs_server.on('connection', function(conn) {
 
-        var loc = conn.url.indexOf("?");
+        var params = getParams(conn.url);
 
-        if (loc < 0) {
-            config.logger.app.info("no query string found");
+        if (params == null) {
             conn.close();
             return;
         }
 
-        var qs = conn.url.substring(loc + 1);
-        var params = querystring.parse(qs);
+        var host = getHost(params);
 
-        if (!params.host) {
-            config.logger.app.info('host not specified in query string: ' + qs);
+        if (host == null) {
             conn.close();
             return;
         }
 
-        if (!matcher.contains(params.host)) {
-            config.logger.app.warning("Attempt to proxy to an unauthorized IP: " + params.host);
-            conn.close();
-            return;
-        }
-
-        var client = net.connect(19885, params.host, function() {
+        var client = net.connect(19885, host, function() {
             // this callback gets triggered when a successful connection is established
 
             client.on('close', function(had_error) {
