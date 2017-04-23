@@ -14,5 +14,8 @@
   "repository": {
       "type": "git",
       "url": "https://github.com/BonnyCI/logging-proxy.git"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
