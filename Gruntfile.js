@@ -13,7 +13,9 @@ module.exports = function(grunt) {
                     'sock/**/*.js'],
 
             options: {
-                esversion: 6
+                esversion: 6,
+                mocha: true,
+                node: true
             }
         },
 
