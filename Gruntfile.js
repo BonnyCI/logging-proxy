@@ -1,35 +1,23 @@
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'test'
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
 
-    // Project configuration.
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+    eslint: {
+      target: ['.']
+    },
 
-        jshint: {
-            files: ['Gruntfile.js',
-                    'index.js',
-                    'static/**/*.js',
-                    'sock/**/*.js'],
+    mochaTest: {
+      test: {
+        options: {},
+        src: ['**/*.spec.js']
+      }
+    }
+  })
 
-            options: {
-                esversion: 6,
-                mocha: true,
-                node: true
-            }
-        },
+  grunt.loadNpmTasks('grunt-eslint')
+  grunt.loadNpmTasks('grunt-mocha-test')
 
-        mochaTest: {
-            test: {
-                options: {
-                },
-                src: ['**/*.spec.js']
-            }
-        }
-    });
-
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-mocha-test');
-
-    grunt.registerTask('test', ['jshint', 'mochaTest']);
-};
+  grunt.registerTask('test', ['eslint', 'mochaTest'])
+}
