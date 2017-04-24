@@ -31,8 +31,15 @@ function getHost (params) {
   return params.host
 }
 
+function createSocket () {
+  // A function for better mocking
+  return new net.Socket()
+}
+
+exports.createSocket = createSocket
+
 function createClient (conn) {
-  var socket = new net.Socket()
+  var socket = exports.createSocket()
 
   socket.on('error', function (err) {
     config.logger.telnet.warn('Error: ' + err.message)
@@ -95,6 +102,8 @@ function onConnection (conn) {
   })
 }
 
+exports.onConnection = onConnection
+
 module.exports.register = function (server) {
   'use strict'
 
@@ -102,7 +111,7 @@ module.exports.register = function (server) {
     sockjs_url: 'https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js'
   })
 
-  sockJsServer.on('connection', onConnection)
+  sockJsServer.on('connection', exports.onConnection)
   sockJsServer.installHandlers(server, { prefix: '/sock' })
 
   server.addListener('upgrade', function (req, res) {
