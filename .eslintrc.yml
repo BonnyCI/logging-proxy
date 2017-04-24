@@ -6,3 +6,6 @@ env:
 plugins:
   - standard
   - promise
+rules:
+  eqeqeq: 2
+  no-eq-null: 2

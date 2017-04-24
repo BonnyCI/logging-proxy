@@ -74,7 +74,7 @@ function createClient (conn) {
 function onConnection (conn) {
   var params = getParams(conn.url)
 
-  if (params == null) {
+  if (params === null) {
     conn.end()
     return
   }
