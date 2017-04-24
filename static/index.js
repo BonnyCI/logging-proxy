@@ -1,5 +1,6 @@
 const path = require('path')
-const staticDirectory = new (require('node-static').Server)(path.join(__dirname, '/data'))
+const stat = require('node-static')
+const staticDirectory = new stat.Server(path.join(__dirname, '/data'))
 
 module.exports.register = function (server) {
   'use strict'
