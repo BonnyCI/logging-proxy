@@ -1,11 +1,10 @@
-const node_static = require('node-static');
+const path = require('path')
+const staticDirectory = new (require('node-static').Server)(path.join(__dirname, '/data'))
 
-var static_directory = new node_static.Server(__dirname + "/data");
+module.exports.register = function (server) {
+  'use strict'
 
-module.exports.register = function(server) {
-    'use strict';
-
-    server.addListener('request', function(req, res) {
-        static_directory.serve(req, res);
-    });
-};
+  server.addListener('request', function (req, res) {
+    staticDirectory.serve(req, res)
+  })
+}
