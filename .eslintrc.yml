@@ -9,3 +9,4 @@ plugins:
 rules:
   eqeqeq: 2
   no-eq-null: 2
+  max-len: [2, 80]

@@ -24,7 +24,8 @@ function getHost (params) {
   }
 
   if (!matcher.contains(params.host)) {
-    config.logger.app.warn('Attempt to proxy to an unauthorized IP: ' + params.host)
+    var m = 'Attempt to proxy to an unauthorized IP: ' + params.host
+    config.logger.app.warn(m)
     return null
   }
 

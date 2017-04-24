@@ -95,7 +95,8 @@ describe('sock.onConnection', function () {
   afterEach(function () {
     // telnet will always try to connect when a websocket gets connected
     assert(this.telnet.connect.calledOnce, "it didn't call connect")
-    assert(this.telnet.connect.calledWith(19885, host), "it didn't call connect with the right params")
+    assert(this.telnet.connect.calledWith(19885, host),
+           "it didn't call connect with the right params")
 
     // we will never write data to telnet
     assert(!this.telnet.write.called)
