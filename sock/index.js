@@ -68,14 +68,14 @@ function onConnection(conn) {
 
     var params = getParams(conn.url);
 
-    if (params == null) {
+    if (params === null) {
         conn.end();
         return;
     }
 
     var host = getHost(params);
 
-    if (host == null) {
+    if (host === null) {
         conn.end();
         return;
     }
@@ -110,7 +110,7 @@ module.exports.register = function(server) {
     server.addListener('upgrade', function(req, res) {
         res.end();
     });
-}
+};
 
 if (config.isTest) {
     module.exports.getHost = getHost;
