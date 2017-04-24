@@ -34,8 +34,30 @@ var argv = require('yargs')
 
 module.exports.port = argv.p;
 module.exports.bind_host = argv.b;
+module.exports.isTest = (process.env.NODE_ENV === 'test');
 
-if (argv.l) {
+if (module.exports.isTest) {
+    // NOTE(jamielennox); I feel like there must be a better way to do this.
+    // It should be controlled via tests, but I need to mute it here.
+    // taken from https://github.com/rbudiharso/winston-null
+    var NullTransport = function() {};
+
+    require('util').inherits(NullTransport, winston.Transport);
+    NullTransport.prototype.name = 'NullTransport';
+    NullTransport.prototype.log = function(level, msg, meta, callback) {
+        callback(null);
+    };
+
+    logger = new winston.Logger({
+        transports: [new NullTransport()]
+    });
+
+    module.exports.logger = {
+        app: logger,
+        telnet: logger
+    };
+
+} else if (argv.l) {
     var logger = winstonConf.fromFileSync(argv.l);
 
     module.exports.logger = {
